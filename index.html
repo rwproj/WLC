@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="manifest" href="manifest.json" />
+  <title>Exercise Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .result {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Exercise Calculator</h1>
+  <div class="input-group">
+    <input type="text" id="W1" placeholder="Enter W1 (kg)" />
+    <input type="text" id="R1" placeholder="Enter R1" />
+    <input type="text" id="R2" placeholder="Desired R2" />
+    <button id="calculateW2Btn">Calculate W2</button>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="W2" placeholder="Desired W2 (kg)" />
+    <button id="calculateR2Btn">Calculate R2</button>
+  </div>
+
+  <div class="input-group">
+    <input type="text" id="percentage" placeholder="Desired % of 1RM" />
+    <button id="calculateW2ForPctBtn">Calculate W2 for %1RM</button>
+  </div>
+
+  <div id="result" class="result"></div>
+
+  <script>
+    // Calculation Functions
+    function calculateW2(W1, R1, R2) {
+      return W1 * ((1 + R1 / 30) / (1 + R2 / 30));
+    }
+
+    function calculateR2(W1, R1, W2) {
+      return 30 * ((W1 / W2) * (1 + R1 / 30) - 1);
+    }
+
+    function calculate1RM(W, R) {
+      return W * (1 + R / 30);
+    }
+
+    function calculateW2ForPercentage(oneRM, percentage) {
+      return oneRM * (percentage / 100);
+    }
+
+    // Action Handlers
+    document.getElementById("calculateW2Btn").addEventListener("click", function () {
+      const W1 = parseFloat(document.getElementById("W1").value);
+      const R1 = parseFloat(document.getElementById("R1").value);
+      const R2 = parseFloat(document.getElementById("R2").value);
+
+      if (isNaN(W1) || isNaN(R1) || isNaN(R2)) {
+        document.getElementById("result").innerText = "Invalid input for W1, R1, or R2.";
+        return;
+      }
+
+      const W2 = calculateW2(W1, R1, R2);
+      document.getElementById("result").innerText = `Calculated W2: ${W2.toFixed(2)} kg`;
+    });
+
+    document.getElementById("calculateR2Btn").addEventListener("click", function () {
+      const W1 = parseFloat(document.getElementById("W1").value);
+      const R1 = parseFloat(document.getElementById("R1").value);
+      const W2 = parseFloat(document.getElementById("W2").value);
+
+      if (isNaN(W1) || isNaN(R1) || isNaN(W2)) {
+        document.getElementById("result").innerText = "Invalid input for W1, R1, or W2.";
+        return;
+      }
+
+      const R2 = calculateR2(W1, R1, W2);
+      document.getElementById("result").innerText = `Calculated R2: ${R2.toFixed(2)} reps`;
+    });
+
+    document.getElementById("calculateW2ForPctBtn").addEventListener("click", function () {
+      const W1 = parseFloat(document.getElementById("W1").value);
+      const R1 = parseFloat(document.getElementById("R1").value);
+      const percentage = parseFloat(document.getElementById("percentage").value);
+
+      if (isNaN(W1) || isNaN(R1) || isNaN(percentage)) {
+        document.getElementById("result").innerText = "Invalid input for W1, R1, or Percentage.";
+        return;
+      }
+
+      const oneRM = calculate1RM(W1, R1);
+      const W2 = calculateW2ForPercentage(oneRM, percentage);
+      document.getElementById("result").innerText = `Calculated W2: ${W2.toFixed(2)} kg`;
+    });
+  </script>
+</body>
+</html>
